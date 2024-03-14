@@ -1,0 +1,25 @@
+{
+  "name": "tsg-bot",
+  "version": "1.0.0",
+  "description": "TheStoryGraph discord bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luoabd/tsg-bot.git"
+  },
+  "author": "luoabd",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luoabd/tsg-bot/issues"
+  },
+  "homepage": "https://github.com/luoabd/tsg-bot#readme",
+  "dependencies": {
+    "discord.js": "^14.14.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0"
+  }
+}
