@@ -17,9 +17,11 @@
   },
   "homepage": "https://github.com/luoabd/tsg-bot#readme",
   "dependencies": {
-    "discord.js": "^14.14.1"
+    "discord.js": "^14.14.1",
+    "undici": "^6.8.0"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.23.10",
     "eslint": "^8.57.0"
   }
 }
