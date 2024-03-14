@@ -1,23 +1,41 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { request } = require('undici');
 
-const exampleEmbed = new EmbedBuilder()
-	.setTitle('Book title')
-	.setURL('https://app.thestorygraph.com/')
-	.setDescription('Twenty-year-old Violet Sorrengail was supposed to enter the Scribe Quadrant, living a quiet life among books and history. Now, the commanding general—also known as her tough-as-talons mother—has ordered Violet to join the hundreds of candidates striving to become the elite of Navarre: dragon riders. ')
-	.setThumbnail('https://i.imgur.com/AfFp7pu.png')
+
+async function fetchBooksJSON(searchQuery) {
+	// TODO: Change api link when ready
+	const response = await request(`http://localhost:4001/search?searchQuery=${searchQuery}`);
+	const bookInfo = await response.body.json();
+
+	const bookSearch = new EmbedBuilder()
+	.setTitle(bookInfo.title)
+	.setURL(bookInfo.url)
+	.addFields({ name: 'Series', value: bookInfo.series })
+	.setDescription(bookInfo.description)
+	.setThumbnail(bookInfo.cover)
 	.addFields(
-		{ name: 'Author', value: 'Brando Sando' },
-		{ name: 'Genres', value: 'fiction, fantasy, romance' },
-		{ name: 'Pages', value: '528', inline: true },
-		{ name: 'Rating', value: '4.48', inline: true },
-		{ name: 'Published', value: '2023', inline: true },
+		{ name: 'Author', value: bookInfo.author },
+		{ name: 'Tags', value: bookInfo.tags},
+		{ name: 'Pages', value: bookInfo.pages, inline: true },
+		{ name: 'Rating', value: bookInfo.rating, inline: true },
+		{ name: 'Published', value: bookInfo.publishDate, inline: true },
 	);
+
+	return bookSearch;
+}
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('search')
-		.setDescription('Search for a book title'),
+		.setDescription('Search for a book title')
+		.addStringOption(option =>
+			option.setName('title')
+				.setDescription('The book title you want to search for')
+				.setRequired(true)),
 	async execute(interaction) {
-		await interaction.reply({ embeds: [exampleEmbed] });
+		await interaction.deferReply();
+		const searchQuery = interaction.options.getString('title');
+		const book = await fetchBooksJSON(searchQuery);
+		await interaction.editReply({ embeds: [book] });
 	},
 };
